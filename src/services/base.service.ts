@@ -131,14 +131,14 @@ export default abstract class BaseService<T> {
 
 	public async save(entity: T): Promise<T> {
 		try {
-			// Check if the entity object is valid
+			// Check if the entity is valid
 			const entityIsValid = await this.isValid(entity);
 			if (!entityIsValid) {
 				throw Boom.badRequest(
 					'Incorrect / invalid parameters supplied'
 				);
 			}
-			// Save the entity object to the database
+			// Save the entity to the database
 			return await this.repository.save(entity);
 		} catch (error) {
 			if (Boom.isBoom(error)) {
@@ -150,14 +150,14 @@ export default abstract class BaseService<T> {
 
 	public async update(entity: T, id: number): Promise<T> {
 		try {
-			// Check if the entity object is valid
+			// Check if the entity is valid
 			const entityIsValid = await this.isValid(entity);
 			if (!entityIsValid || !this.validId(id)) {
 				throw Boom.badRequest(
 					'Incorrect / invalid parameters supplied'
 				);
 			}
-			// Update the entity object on the database
+			// Update the entity on the database
 			return await this.repository.updateOneById(id, entity);
 		} catch (error) {
 			if (Boom.isBoom(error)) {
@@ -174,7 +174,6 @@ export default abstract class BaseService<T> {
 					'Incorrect / invalid parameters supplied'
 				);
 			}
-			// Do a soft delete
 			const entityResult: T = await this.repository.findOneById(id);
 			await this.repository.delete(entityResult);
 			return entityResult;

@@ -8,58 +8,6 @@ Simple infrastructure implementation for [TypeORM](http://typeorm.io).
 npm install typeorm-infrastructure --save
 ```
 
-### Repository API
-
-The base repository will give you access to the following methods:
-
-```typescript
-getAll(options?: FindManyOptions<T>): Promise<T[]>;
-findManyByFilter(options: FindManyOptions<T>): Promise<T[]>;
-findOneById(id: number): Promise<T>;
-findOneByIdWithOptions(id: number, options?: FindOneOptions<T>): Promise<T>;
-findManyById(idList: number[], options?: FindOneOptions<T>): Promise<T[]>;
-findOneByFilter(options: FindOneOptions<T>): Promise<T>;
-save(record: T, options?: SaveOptions): Promise<T>;
-saveAll(
-	records: T[],
-	options?: SaveOptions,
-	resolveRelations?: boolean
-): Promise<T[]>;
-updateOneById(id: number, record: T, options?: SaveOptions): Promise<T>;
-delete(record: T, options?: RemoveOptions);
-deleteOneById(
-	id: number,
-	findOptions?: FindOneOptions<T>,
-	deleteOptions?: RemoveOptions
-): Promise<T>;
-deleteManyById(idList: number[], deleteOptions?: RemoveOptions): Promise<T>;
-findOneWithQueryBuilder(
-	options: ISearchQueryBuilderOptions
-): Promise<T | undefined>;
-findManyWithQueryBuilder(options: ISearchQueryBuilderOptions): Promise<T[]>;
-```
-
-### Service API
-
-The base service will give you access to the following methods:
-
-```typescript
-findAll(): Promise<T[]>;
-findAllByFilter(filter: FindManyOptions<T>): Promise<T[]>;
-findOneById(id: number): Promise<T>;
-findOneByFilter(filter: FindOneOptions<T>): Promise<T>;
-findOneWithQueryBuilder(options: ISearchQueryBuilderOptions): Promise<T>;
-findManyWithQueryBuilder(options: ISearchQueryBuilderOptions): Promise<T[]>;
-search(limit: number, searchTerms: SearchTerm[]);
-save(entity: T): Promise<T>;
-update(entity: T, id: number): Promise<T>;
-delete(id: number): Promise<T>;
-getSearchFilter(
-	limit: number,
-	searchTerms: SearchTerm[]
-): ISearchQueryBuilderOptions;
-```
-
 ### Usage
 
 Create a TypeORM entity:
@@ -164,9 +112,61 @@ Create a service for the entity above:
 ```typescript
 import { BaseService } from 'typeorm-infrastructure';
 
-export default class UserService extends BaseService {
+export default class UserService extends BaseService<User> {
 	constructor(private repository: UserRepository) {
-		super();
+		super(repository);
 	}
 }
+```
+
+### Repository API
+
+The base repository will give you access to the following methods:
+
+```typescript
+getAll(options?: FindManyOptions<T>): Promise<T[]>;
+findManyByFilter(options: FindManyOptions<T>): Promise<T[]>;
+findOneById(id: number): Promise<T>;
+findOneByIdWithOptions(id: number, options?: FindOneOptions<T>): Promise<T>;
+findManyById(idList: number[], options?: FindOneOptions<T>): Promise<T[]>;
+findOneByFilter(options: FindOneOptions<T>): Promise<T>;
+save(record: T, options?: SaveOptions): Promise<T>;
+saveAll(
+	records: T[],
+	options?: SaveOptions,
+	resolveRelations?: boolean
+): Promise<T[]>;
+updateOneById(id: number, record: T, options?: SaveOptions): Promise<T>;
+deleteOneById(
+	id: number,
+	findOptions?: FindOneOptions<T>,
+	deleteOptions?: RemoveOptions
+): Promise<T>;
+deleteManyById(idList: number[], deleteOptions?: RemoveOptions): Promise<T>;
+findOneWithQueryBuilder(
+	options: ISearchQueryBuilderOptions
+): Promise<T | undefined>;
+findManyWithQueryBuilder(options: ISearchQueryBuilderOptions): Promise<T[]>;
+delete(record: T, options?: RemoveOptions);
+```
+
+### Service API
+
+The base service will give you access to the following methods:
+
+```typescript
+findAll(): Promise<T[]>;
+findAllByFilter(filter: FindManyOptions<T>): Promise<T[]>;
+findOneById(id: number): Promise<T>;
+findOneByFilter(filter: FindOneOptions<T>): Promise<T>;
+findOneWithQueryBuilder(options: ISearchQueryBuilderOptions): Promise<T>;
+findManyWithQueryBuilder(options: ISearchQueryBuilderOptions): Promise<T[]>;
+search(limit: number, searchTerms: SearchTerm[]);
+save(entity: T): Promise<T>;
+update(entity: T, id: number): Promise<T>;
+getSearchFilter(
+	limit: number,
+	searchTerms: SearchTerm[]
+): ISearchQueryBuilderOptions;
+delete(id: number): Promise<T>;
 ```
