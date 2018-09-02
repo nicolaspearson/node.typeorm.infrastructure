@@ -1,0 +1,9 @@
+*.ts
+*.map
+.vscode/
+test/
+tsconfig.json
+*.tgz
+*.log
+!index.d.ts
+!src/index.js
