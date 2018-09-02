@@ -1,12 +1,12 @@
 import Boom from 'boom';
 import { validate, ValidationError } from 'class-validator';
-import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
 
 import SearchTerm from '../models/internal/search-term.internal';
 import { ISearchQueryBuilderOptions } from '../models/options/search-query-builder.options';
 import BaseRepository from '../repositories/base.repository';
 
-export default abstract class BaseService<T> {
+export default abstract class BaseService<T extends DeepPartial<T>> {
 	constructor(private repository: BaseRepository<T>) {
 		// Empty constructor
 	}
@@ -117,7 +117,10 @@ export default abstract class BaseService<T> {
 		}
 	}
 
-	public async search(limit: number, searchTerms: SearchTerm[]) {
+	public async search(
+		limit: number,
+		searchTerms: SearchTerm[]
+	): Promise<T[]> {
 		try {
 			const filter = this.getSearchFilter(limit, searchTerms);
 			return await this.findManyWithQueryBuilder(filter);

@@ -9,7 +9,7 @@ export default class SearchTerm {
 		field?: string;
 		value?: string;
 		operator?: string;
-	}) {
+	}): SearchTerm {
 		const newSearchTerm = new SearchTerm();
 		if (obj.field) {
 			newSearchTerm.field = obj.field;

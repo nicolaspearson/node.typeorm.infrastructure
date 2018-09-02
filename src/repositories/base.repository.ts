@@ -1,24 +1,26 @@
 import Boom from 'boom';
 import {
+	DeepPartial,
 	FindManyOptions,
 	FindOneOptions,
 	getManager,
 	QueryFailedError,
 	RemoveOptions,
+	Repository,
 	SaveOptions,
 	SelectQueryBuilder
 } from 'typeorm';
 
 import { ISearchQueryBuilderOptions } from '../models/options/search-query-builder.options';
 
-export default abstract class BaseRepository<T> {
+export default abstract class BaseRepository<T extends DeepPartial<T>> {
 	private entityName: string;
 
 	constructor(entityName: string) {
 		this.entityName = entityName;
 	}
 
-	protected getRepository() {
+	protected getRepository(): Repository<T> {
 		return getManager().getRepository(this.entityName);
 	}
 
@@ -189,7 +191,7 @@ export default abstract class BaseRepository<T> {
 		return this.findOneById(id);
 	}
 
-	public async delete(record: T, options?: RemoveOptions) {
+	public async delete(record: T, options?: RemoveOptions): Promise<T> {
 		return await this.executeRepositoryFunction(
 			this.getRepository().remove(record, options)
 		);
