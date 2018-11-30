@@ -1,6 +1,6 @@
 {
 	"name": "typeorm-infrastructure",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "Simple infrastructure implementation for TypeORM.",
 	"main": "src/index.js",
 	"scripts": {
@@ -21,16 +21,16 @@
 	"author": "Nicolas Pearson",
 	"license": "MIT",
 	"dependencies": {
-		"boom": "^7.2.0",
+		"boom": "^7.3.0",
 		"class-validator": "^0.9.1",
-		"typeorm": "^0.2.7"
+		"typeorm": "^0.2.9"
 	},
 	"devDependencies": {
-		"@types/boom": "^7.2.0",
-		"@types/node": "^10.9.4",
+		"@types/boom": "^7.2.1",
+		"@types/node": "^10.12.10",
 		"ts-helpers": "~1.1.2",
 		"ts-node": "^7.0.1",
 		"tslint": "^5.11.0",
-		"typescript": "^3.0.3"
+		"typescript": "^3.2.1"
 	}
 }
