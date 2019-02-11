@@ -1,6 +1,5 @@
 import Boom from 'boom';
 import {
-	DeepPartial,
 	FindManyOptions,
 	FindOneOptions,
 	getManager,
@@ -13,7 +12,7 @@ import {
 
 import { ISearchQueryBuilderOptions } from '../models/options/search-query-builder.options';
 
-export default abstract class BaseRepository<T extends DeepPartial<T>> {
+export default abstract class BaseRepository<T> {
 	private entityName: string;
 
 	constructor(entityName: string) {

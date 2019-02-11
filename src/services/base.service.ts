@@ -151,6 +151,27 @@ export default abstract class BaseService<T extends DeepPartial<T>> {
 		}
 	}
 
+	public async saveAll(entities: T[]): Promise<T[]> {
+		try {
+			for (const entity of entities) {
+				// Check if the entity is valid
+				const entityIsValid = await this.isValid(entity);
+				if (!entityIsValid) {
+					throw Boom.badRequest(
+						'Incorrect / invalid parameters supplied'
+					);
+				}
+			}
+			// Save the entity to the database
+			return await this.repository.saveAll(entities);
+		} catch (error) {
+			if (Boom.isBoom(error)) {
+				throw Boom.boomify(error);
+			}
+			throw Boom.internal(error);
+		}
+	}
+
 	public async update(entity: T, id: number): Promise<T> {
 		try {
 			// Check if the entity is valid
