@@ -1,14 +1,16 @@
-# typeorm-infrastructure
+# Typeorm Infrastructure
 
-Simple infrastructure implementation for [TypeORM](http://typeorm.io).
+Simple generic class implementation for [TypeORM](http://typeorm.io) utilising the repository pattern.
 
-### Installation
+## Installation
 
 ```
 npm install typeorm-infrastructure --save
 ```
 
-### Usage
+## Usage
+
+### Step 1:
 
 Create a TypeORM entity:
 
@@ -95,6 +97,8 @@ export class User {
 }
 ```
 
+### Step 2:
+
 Create a repository for the entity above:
 
 ```typescript
@@ -106,6 +110,8 @@ export default class UserRepository extends BaseRepository<User> {
 	}
 }
 ```
+
+### Step 3:
 
 Create a service for the entity above:
 
@@ -119,7 +125,7 @@ export default class UserService extends BaseService<User> {
 }
 ```
 
-### Repository API
+## Repository API
 
 The base repository will give you access to the following methods:
 
@@ -150,11 +156,15 @@ findManyWithQueryBuilder(options: ISearchQueryBuilderOptions): Promise<T[]>;
 delete(record: T, options?: RemoveOptions);
 ```
 
-### Service API
+## Service API
 
 The base service will give you access to the following methods:
 
 ```typescript
+preSaveHook(entity: T): void;
+preUpdateHook(entity: T): void;
+validId(id: number): boolean;
+isValid(entity: T): Promise<boolean>;
 findAll(): Promise<T[]>;
 findAllByFilter(filter: FindManyOptions<T>): Promise<T[]>;
 findOneById(id: number): Promise<T>;

@@ -1,6 +1,6 @@
 {
 	"name": "typeorm-infrastructure",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"description": "Simple infrastructure implementation for TypeORM.",
 	"main": "src/index.js",
 	"scripts": {
@@ -27,7 +27,7 @@
 	},
 	"devDependencies": {
 		"@types/boom": "~7.2.1",
-		"@types/node": "~10.12.24",
+		"@types/node": "~11.9.0",
 		"ts-helpers": "~1.1.2",
 		"ts-node": "~8.0.2",
 		"tslint": "~5.12.1",

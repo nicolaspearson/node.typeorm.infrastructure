@@ -61,6 +61,8 @@ declare class BaseRepository<T> {
 
 declare class BaseService<T> {
 	constructor(repository: BaseRepository<T>);
+	preSaveHook(entity: T): void;
+	preUpdateHook(entity: T): void;
 	validId(id: number): boolean;
 	isValid(entity: T): Promise<boolean>;
 	findAll(): Promise<T[]>;
