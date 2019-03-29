@@ -1,6 +1,6 @@
 # Typeorm Infrastructure
 
-Simple generic class implementation for [TypeORM](http://typeorm.io) utilising the repository pattern.
+This library provides a simple wrapper around [TypeORM](http://typeorm.io) functions in order to provide consistent and predictable error messages, it uses [Boom](https://github.com/hapijs/boom) to generate error objects.
 
 ## Installation
 
@@ -15,15 +15,6 @@ npm install typeorm-infrastructure --save
 Create a TypeORM entity:
 
 ```typescript
-import Boom from 'boom';
-import {
-	IsEmail,
-	IsOptional,
-	Length,
-	validate,
-	ValidationArguments,
-	ValidationError
-} from 'class-validator';
 import {
 	Column,
 	CreateDateColumn,
@@ -32,68 +23,31 @@ import {
 	UpdateDateColumn
 } from 'typeorm';
 
-@Entity({ name: 'user' })
-export class User {
+@Entity({ name: 'hero' })
+export default class Hero {
 	@PrimaryGeneratedColumn()
-	public id: number;
+	public id?: number;
 
-	@Column({ name: 'username', length: 255 })
-	@Length(3, 255, {
-		message: (args: ValidationArguments) => {
-			return User.getGenericValidationLengthMessage(args);
-		}
-	})
-	public username: string;
+	@Column({ name: 'name', length: 500 })
+	public name: string;
 
-	@Column({ name: 'password', length: 255 })
-	@Length(4, 255, {
-		message: (args: ValidationArguments) => {
-			return User.getGenericValidationLengthMessage(args);
-		}
-	})
-	@IsOptional()
-	public password: string;
+	@Column({ name: 'identity', length: 500 })
+	public identity: string;
 
-	@Column({ name: 'email_address', length: 255 })
-	@IsEmail(
-		{},
-		{
-			message: 'Must be a valid email address'
-		}
-	)
-	public emailAddress: string;
+	@Column({ name: 'hometown', length: 500 })
+	public hometown: string;
 
-	@CreateDateColumn({ name: 'created_at' })
-	public createdAt: Date;
+	@Column({ name: 'age' })
+	public age: number;
 
-	@UpdateDateColumn({ name: 'updated_at' })
-	public updatedAt: Date;
+	@CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
+	public createdAt?: Date;
 
-	public static newUser(obj: {
-		id?: number;
-		username?: string;
-		emailAddress?: string;
-		password?: string;
-	}) {
-		const newUser = new User();
-		if (obj.id) {
-			newUser.id = obj.id;
-		}
-		if (obj.username) {
-			newUser.username = obj.username;
-		}
-		if (obj.emailAddress) {
-			newUser.emailAddress = obj.emailAddress;
-		}
-		if (obj.password) {
-			newUser.password = obj.password;
-		}
-		return newUser;
-	}
+	@UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
+	public updatedAt?: Date;
 
-	public static getGenericValidationLengthMessage(args: ValidationArguments) {
-		return 'Incorrect length: Found ' + args.constraints[0] + ' characters';
-	}
+	@Column({ name: 'deleted_at', nullable: true, type: 'timestamp with time zone' })
+	public deletedAt?: Date;
 }
 ```
 
@@ -102,11 +56,13 @@ export class User {
 Create a repository for the entity above:
 
 ```typescript
-import { BaseRepository } from 'typeorm-infrastructure';
+import BaseRepository from 'grpc-typeorm-infrastructure';
 
-export default class UserRepository extends BaseRepository<User> {
+import Hero from '@entities/hero.entity';
+
+export default class HeroRepository extends BaseRepository<Hero> {
 	constructor() {
-		super(User.name);
+		super(Hero.name);
 	}
 }
 ```
@@ -116,11 +72,33 @@ export default class UserRepository extends BaseRepository<User> {
 Create a service for the entity above:
 
 ```typescript
-import { BaseService } from 'typeorm-infrastructure';
+import { BaseService } from 'grpc-typeorm-infrastructure';
 
-export default class UserService extends BaseService<User> {
-	constructor(private repository: UserRepository) {
-		super(repository);
+import Hero from '@entities/hero.entity';
+
+export default class HeroService extends BaseService<Hero> {
+	constructor(heroRepository: HeroRepository) {
+		super(heroRepository);
+	}
+
+	public preSaveHook(hero: Hero): void {
+		// Executed before the save repository call
+		delete hero.id;
+	}
+
+	public preUpdateHook(hero: Hero) {
+		// Executed before the update repository call
+		delete hero.updatedAt;
+	}
+
+	public preDeleteHook(hero: Hero) {
+		// Executed before the delete repository call
+		hero.deletedAt = new Date();
+	}
+
+	public preResultHook(hero: Hero) {
+		// Executed before the result is returned
+		delete hero.deletedAt;
 	}
 }
 ```
@@ -142,7 +120,7 @@ saveAll(
 	options?: SaveOptions,
 	resolveRelations?: boolean
 ): Promise<T[]>;
-updateOneById(id: number, record: T, options?: SaveOptions): Promise<T>;
+updateOneById(id: number, record: T): Promise<T>;
 deleteOneById(
 	id: number,
 	findOptions?: FindOneOptions<T>,
@@ -162,7 +140,10 @@ The base service will give you access to the following methods:
 
 ```typescript
 preSaveHook(entity: T): void;
+preSaveHook(entity: T): void;
 preUpdateHook(entity: T): void;
+preDeleteHook(entity: T): void;
+preResultHook(entity: T): void;
 validId(id: number): boolean;
 isValid(entity: T): Promise<boolean>;
 findAll(): Promise<T[]>;
@@ -173,10 +154,13 @@ findOneWithQueryBuilder(options: ISearchQueryBuilderOptions): Promise<T>;
 findManyWithQueryBuilder(options: ISearchQueryBuilderOptions): Promise<T[]>;
 search(limit: number, searchTerms: SearchTerm[]);
 save(entity: T): Promise<T>;
+saveAll(entities: T[]): Promise<T[]>;
 update(entity: T, id: number): Promise<T>;
+updateAll(entities: T[]): Promise<T[]>;
 getSearchFilter(
 	limit: number,
 	searchTerms: SearchTerm[]
 ): ISearchQueryBuilderOptions;
 delete(id: number): Promise<T>;
+softDelete(id: number): Promise<T>;
 ```
