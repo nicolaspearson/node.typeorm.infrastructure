@@ -1,4 +1,4 @@
-import Boom from 'boom';
+import Boom from '@hapi/boom';
 import { validate, ValidationError } from 'class-validator';
 import { DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
 
