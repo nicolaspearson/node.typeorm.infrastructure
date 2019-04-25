@@ -1,6 +1,6 @@
 {
 	"name": "typeorm-infrastructure",
-	"version": "1.0.10",
+	"version": "1.0.11",
 	"description": "Simple infrastructure implementation for TypeORM.",
 	"main": "src/index.js",
 	"scripts": {
