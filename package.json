@@ -1,13 +1,15 @@
 {
 	"name": "typeorm-infrastructure",
-	"version": "1.0.12",
+	"version": "1.0.13",
 	"description": "Simple infrastructure implementation for TypeORM.",
 	"main": "src/index.js",
 	"scripts": {
 		"build": "npm run tslint && rm -rf ./dist && npm run build:ts",
 		"build:ts": "tsc --rootDir ./src/",
 		"tslint": "tslint --fix -c tslint.json -p tsconfig.json",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"ncu": "ncu",
+		"ncu:u": "ncu -u"
 	},
 	"keywords": [
 		"infrastructure",
@@ -22,14 +24,15 @@
 	"license": "MIT",
 	"dependencies": {
 		"@hapi/boom": "~7.4.2",
-		"class-validator": "~0.9.1",
-		"typeorm": "~0.2.17"
+		"class-validator": "~0.10.0",
+		"typeorm": "~0.2.18"
 	},
 	"devDependencies": {
-		"@types/node": "~12.0.2",
+		"@types/node": "~12.7.1",
+		"npm-check-updates": "~3.1.21",
 		"ts-helpers": "~1.1.2",
-		"ts-node": "~8.1.0",
-		"tslint": "~5.16.0",
-		"typescript": "~3.4.5"
+		"ts-node": "~8.3.0",
+		"tslint": "~5.18.0",
+		"typescript": "~3.5.3"
 	}
 }
