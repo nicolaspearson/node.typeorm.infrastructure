@@ -8,6 +8,7 @@ tsconfig.json
 *.log
 .editorconfig
 .prettierrc
+renovate.json
 tslint.json
 src/example
 
