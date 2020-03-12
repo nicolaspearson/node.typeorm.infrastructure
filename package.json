@@ -23,7 +23,7 @@
 	"author": "Nicolas Pearson",
 	"license": "MIT",
 	"dependencies": {
-		"@hapi/boom": "~9.0.0",
+		"@hapi/boom": "~9.1.0",
 		"class-validator": "~0.11.0",
 		"typeorm": "~0.2.22"
 	},
